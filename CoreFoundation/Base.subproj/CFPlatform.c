@@ -1218,11 +1218,6 @@ extern CFStringRef CFCreateWindowsDrivePathFromVolumeName(CFStringRef volNameStr
     return drivePathResult;
 }
 
-struct timezone {
-    int	tz_minuteswest;	/* minutes west of Greenwich */
-    int	tz_dsttime;	/* type of dst correction */
-};
-
 CF_PRIVATE int _NS_gettimeofday(struct timeval *tv, struct timezone *tz) {
     if (tv) {
         FILETIME ft;
