@@ -995,7 +995,6 @@ CF_PRIVATE const wchar_t *_CFDLLPath(void);
 #define CFMaxPathLength ((CFIndex)260)
 #define PATH_SEP '\\'
 #define PATH_SEP_STR CFSTR("\\")
-#define PATH_MAX MAX_PATH
 #else
 /// Use this constant for the size (in characters) of a buffer in which to hold a path. This size adds space for at least a couple of null terminators at the end of a buffer into which you copy up to kCFMaxPathLength characters.
 #define CFMaxPathSize ((CFIndex)1026)
