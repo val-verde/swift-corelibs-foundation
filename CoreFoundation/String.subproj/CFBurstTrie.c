@@ -34,8 +34,6 @@
 #define __builtin_memcmp(x, y, z) memcmp(x, y, z)
 #define __builtin_popcountll(x) popcountll(x)
 #define bzero(dst, size)    ZeroMemory(dst, size)
-#define S_IWUSR 0
-#define S_IRUSR 0
 
 static int pwrite(int fd, const void *buf, size_t nbyte, off_t offset) {
     // Get where we are
