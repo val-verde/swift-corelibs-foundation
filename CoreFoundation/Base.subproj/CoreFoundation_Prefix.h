@@ -56,7 +56,9 @@ extern "C" {
 #if INCLUDE_OBJC
 #include <objc/objc.h>
 #else
+#ifndef _WIN32
 typedef signed char	BOOL; 
+#endif
 typedef char * id;
 typedef char * Class;
 #ifndef YES
