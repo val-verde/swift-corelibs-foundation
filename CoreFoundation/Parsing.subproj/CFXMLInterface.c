@@ -1125,7 +1125,7 @@ _CFXMLDTDPtr _CFXMLNewDTD(_CFXMLDocPtr doc, const unsigned char* name, const uns
     return xmlNewDtd(doc, name, publicID, systemID);
 }
 
-void _CFXMLNotationScanner(void* payload, void* data, xmlChar* name) {
+void _CFXMLNotationScanner(void* payload, void* data, const xmlChar* name) {
     xmlNotationPtr notation = (xmlNotationPtr)payload;
     _cfxmlNotation* node = (_cfxmlNotation*)data;
     node->type = XML_NOTATION_NODE;
