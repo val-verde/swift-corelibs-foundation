@@ -39,7 +39,7 @@ static inline CFLock_t __CFLockInit(void) { return CFLockInit; }
 #define NOMINMAX
 #define VC_EXTRALEAN
 #define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include <windows.h>
 #include <synchapi.h>
 
 typedef int32_t CFLock_t;

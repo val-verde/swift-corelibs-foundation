@@ -24,7 +24,7 @@ CF_EXTERN_C_BEGIN
 #define NOMINMAX
 #define VC_EXTRALEAN
 #define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include <windows.h>
 #else
 typedef SInt32 HRESULT;
 typedef UInt32 ULONG;

@@ -13,8 +13,8 @@
 #include <string.h>
 #include <stdint.h>
 #if TARGET_OS_WIN32
-#include <Windows.h>
-#include <Psapi.h>
+#include <windows.h>
+#include <psapi.h>
 #else
 #include <dlfcn.h>
 #endif

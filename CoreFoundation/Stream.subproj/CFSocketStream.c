@@ -14,7 +14,7 @@
 #include "CFStreamInternal.h"
 #include "CFStreamPriv.h"
 #if TARGET_OS_WIN32
-#include <WinSock2.h>
+#include <winsock2.h>
 #else
 #include <sys/socket.h>
 #endif

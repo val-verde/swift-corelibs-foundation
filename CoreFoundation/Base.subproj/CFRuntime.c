@@ -41,7 +41,7 @@ OBJC_EXPORT void *objc_destructInstance(id obj);
 
 
 #if TARGET_OS_WIN32
-#include <Shellapi.h>
+#include <shellapi.h>
 #endif
 
 enum {
