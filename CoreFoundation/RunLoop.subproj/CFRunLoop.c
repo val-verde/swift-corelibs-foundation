@@ -1452,7 +1452,7 @@ CF_EXPORT CFRunLoopRef _CFRunLoopGet0(_CFThreadRef t) {
 #if _POSIX_THREADS
             _CFSetTSD(__CFTSDKeyRunLoopCntr, (void *)(PTHREAD_DESTRUCTOR_ITERATIONS-1), (void (*)(void *))__CFFinalizeRunLoop);
 #else
-            _CFSetTSD(__CFTSDKeyRunLoopCntr, 0, &__CFFinalizeRunLoop);
+            _CFSetTSD(__CFTSDKeyRunLoopCntr, 0, (void (*)(void *))__CFFinalizeRunLoop);
 #endif
         }
     }
