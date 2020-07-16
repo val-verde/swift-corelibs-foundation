@@ -464,21 +464,21 @@ endif()
 if(CMAKE_SYSTEM_NAME STREQUAL Windows)
   target_link_libraries(CoreFoundation
                         PRIVATE
-                          AdvAPI32
-                          Secur32
-                          User32
+                          advapi32
+                          secur32
+                          user32
                           mincore)
   target_link_libraries(CFURLSessionInterface
                         PRIVATE
-                          AdvAPI32
-                          Secur32
-                          User32
+                          advapi32
+                          secur32
+                          user32
                           mincore)
   target_link_libraries(CFXMLInterface
                         PRIVATE
-                          AdvAPI32
-                          Secur32
-                          User32
+                          advapi32
+                          secur32
+                          user32
                           mincore)
 endif()
 if(NOT CMAKE_SYSTEM_NAME STREQUAL Windows AND NOT CMAKE_SYSTEM_NAME STREQUAL Darwin)

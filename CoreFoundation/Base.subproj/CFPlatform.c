@@ -28,12 +28,12 @@
 #if TARGET_OS_WIN32
 #include <shellapi.h>
 #include <shlobj.h>
-#include <WinIoCtl.h>
+#include <winioctl.h>
 #include <direct.h>
 #include <process.h>
 #include <processthreadsapi.h>
 #define SECURITY_WIN32
-#include <Security.h>
+#include <security.h>
 
 #define getcwd _NS_getcwd
 #define open _NS_open

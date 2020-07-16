@@ -40,7 +40,7 @@
 #include "WindowsResources.h"
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
-#include "Windows.h"
+#include "windows.h"
 #endif
 
 #if TARGET_OS_MAC
