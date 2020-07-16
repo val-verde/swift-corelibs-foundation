@@ -15,10 +15,12 @@ target_include_directories(uuid PUBLIC
   ${CMAKE_BINARY_DIR}/CoreFoundation.framework/Headers)
 
 if(CMAKE_SYSTEM_NAME STREQUAL Windows)
-  target_link_libraries(uuid PRIVATE Bcrypt)
+  target_link_libraries(uuid PRIVATE bcrypt)
 endif()
+if(NOT CMAKE_SYSTEM_NAME STREQUAL Windows)
 set_target_properties(uuid PROPERTIES
   POSITION_INDEPENDENT_CODE YES)
+endif()
 
 if(NOT BUILD_SHARED_LIBS)
   set_property(GLOBAL APPEND PROPERTY Foundation_EXPORTS uuid)
