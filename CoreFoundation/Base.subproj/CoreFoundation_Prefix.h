@@ -377,11 +377,6 @@ CF_INLINE size_t malloc_size(void *memblock) {
     return _msize(memblock);
 }
 
-CF_INLINE long long llabs(long long v) {
-    if (v < 0) return -v;
-    return v;
-}
-
 #define strtoll_l(a,b,c,locale) _strtoi64(a,b,c)
 #define strncasecmp(a, b, c) _strnicmp(a, b, c)
 #define strncasecmp_l(a, b, c, d) _strnicmp(a, b, c)
