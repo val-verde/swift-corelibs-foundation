@@ -1465,7 +1465,7 @@ static void _CFThreadSpecificDestructor(void *ctx) {
 #if TARGET_OS_WIN32
     _CFThreadSpecificData *data = (_CFThreadSpecificData *)ctx;
     FlsSetValue(data->key, NULL);
-    swift_release(data->value);
+    swift_release((void *)data->value);
     free(data);
 #else
     swift_release(ctx);
