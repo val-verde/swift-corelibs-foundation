@@ -1542,6 +1542,17 @@ _CFThreadRef _CFThreadCreate(const _CFThreadAttributes attrs, void *_Nullable (*
 #endif
 }
 
+#if TARGET_OS_WIN32
+HRESULT GetThreadDescription(
+  HANDLE hThread,
+  PWSTR  *ppszThreadDescription
+);
+HRESULT SetThreadDescription(
+  HANDLE hThread,
+  PCWSTR lpThreadDescription
+);
+#endif
+
 CF_CROSS_PLATFORM_EXPORT int _CFThreadSetName(_CFThreadRef thread, const char *_Nonnull name) {
 #if TARGET_OS_MAC
     if (pthread_equal(pthread_self(), thread)) {
