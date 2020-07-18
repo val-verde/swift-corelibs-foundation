@@ -22,6 +22,8 @@ import Glibc
 fileprivate let _read = Glibc.read(_:_:_:)
 fileprivate let _write = Glibc.write(_:_:_:)
 fileprivate let _close = Glibc.close(_:)
+#elseif canImport(WinSDK)
+import WinSDK
 #endif
 
 #if canImport(WinSDK)
@@ -416,7 +418,7 @@ open class FileHandle : NSObject {
     public init(fileDescriptor fd: Int32, closeOnDealloc closeopt: Bool) {
       if (closeopt) {
         var handle: HANDLE?
-        if DuplicateHandle(GetCurrentProcess(), HANDLE(bitPattern: _get_osfhandle(fd))!, GetCurrentProcess(), &handle, 0, false, DWORD(DUPLICATE_SAME_ACCESS)) == 0 {
+        if DuplicateHandle(GetCurrentProcess(), HANDLE(bitPattern: _get_osfhandle(fd))!, GetCurrentProcess(), &handle, 0, 0, DWORD(DUPLICATE_SAME_ACCESS)) == 0 {
           fatalError("DuplicateHandle() failed: \(GetLastError())")
         }
         _close(fd)
@@ -559,7 +561,7 @@ open class FileHandle : NSObject {
         guard _isPlatformHandleValid else { throw NSError(domain: NSCocoaErrorDomain, code: CocoaError.fileReadUnknown.rawValue) }
 
         #if os(Windows)
-        guard SetFilePointerEx(self._handle, LARGE_INTEGER(QuadPart: LONGLONG(offset)), nil, DWORD(FILE_BEGIN)) != = 0 else {
+        guard SetFilePointerEx(self._handle, LARGE_INTEGER(QuadPart: LONGLONG(offset)), nil, DWORD(FILE_BEGIN)) != 0 else {
             throw _NSErrorWithWindowsError(GetLastError(), reading: true)
         }
         #else
