@@ -299,7 +299,7 @@ open class NSRecursiveLock: NSObject, NSLocking {
     
     open func `try`() -> Bool {
 #if os(Windows)
-        return TryEnterCriticalSection(mutex)
+        return TryEnterCriticalSection(mutex) != 0
 #else
         return pthread_mutex_trylock(mutex) == 0
 #endif
@@ -307,7 +307,7 @@ open class NSRecursiveLock: NSObject, NSLocking {
     
     open func lock(before limit: Date) -> Bool {
 #if os(Windows)
-        if TryEnterCriticalSection(mutex) {
+        if TryEnterCriticalSection(mutex) != 0 {
             return true
         }
 #else
@@ -382,7 +382,7 @@ open class NSCondition: NSObject, NSLocking {
 
     open func wait(until limit: Date) -> Bool {
 #if os(Windows)
-        return SleepConditionVariableSRW(cond, mutex, timeoutFrom(date: limit), 0)
+        return SleepConditionVariableSRW(cond, mutex, timeoutFrom(date: limit), 0) != 0
 #else
         guard var timeout = timeSpecFrom(date: limit) else {
             return false
@@ -476,7 +476,7 @@ private func timedLock(mutex: _RecursiveMutexPointer, endTime: Date,
       SleepConditionVariableSRW(timeoutCond, timeoutMutex,
                                 timeoutFrom(date: endTime), 0)
       ReleaseSRWLockExclusive(timeoutMutex)
-      if TryEnterCriticalSection(mutex) {
+      if TryEnterCriticalSection(mutex) != 0 {
         return true
       }
     } while timeoutFrom(date: endTime) != 0
