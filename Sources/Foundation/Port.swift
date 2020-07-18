@@ -110,10 +110,10 @@ import WinSDK
    char           sin_zero[8];
  } SOCKADDR_IN, *PSOCKADDR_IN, *LPSOCKADDR_IN;
  */
-fileprivate typealias sa_family_t = ADDRESS_FAMILY
+fileprivate typealias sa_family_t = Int16
 fileprivate typealias in_port_t = USHORT
 fileprivate typealias in_addr_t = UInt32
-fileprivate let IPPROTO_TCP = Int32(WinSDK.IPPROTO_TCP.rawValue)
+fileprivate let IPPROTO_TCP = Int32(WinSDK.IPPROTO_TCP)
 #endif
 
 // MARK: Darwin representation of socket addresses
