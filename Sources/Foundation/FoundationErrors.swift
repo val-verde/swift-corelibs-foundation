@@ -9,6 +9,37 @@
 
 #if os(Windows)
 import WinSDK
+
+internal let ERROR_ACCESS_DENIED = Int32(5)
+internal let ERROR_ALREADY_EXISTS = Int32(183)
+internal let ERROR_BAD_ARGUMENTS = Int32(160)
+internal let ERROR_BAD_EXE_FORMAT = Int32(193)
+internal let ERROR_BAD_PATHNAME = Int32(161)
+internal let ERROR_BROKEN_PIPE = Int32(109)
+internal let ERROR_DIR_NOT_EMPTY = Int32(145)
+internal let ERROR_DIRECTORY = Int32(267)
+internal let ERROR_DIRECTORY_NOT_SUPPORTED = Int32(336)
+internal let ERROR_DISK_RESOURCES_EXHAUSTED = Int32(314)
+internal let ERROR_DISK_FULL = Int32(112)
+internal let ERROR_EXE_MARKED_INVALID = Int32(192)
+internal let ERROR_FILE_EXISTS = Int32(80)
+internal let ERROR_FILE_NOT_FOUND = Int32(2)
+internal let ERROR_FILENAME_EXCED_RANGE = Int32(206)
+internal let ERROR_INVALID_ACCESS = Int32(12)
+internal let ERROR_INVALID_DATA = Int32(13)
+internal let ERROR_INVALID_DRIVE = Int32(15)
+internal let ERROR_INVALID_EXE_SIGNATURE = Int32(191)
+internal let ERROR_INVALID_NAME = Int32(123)
+internal let ERROR_LABEL_TOO_LONG = Int32(154)
+internal let ERROR_LOCK_FAILED = Int32(167)
+internal let ERROR_LOCK_VIOLATION = Int32(33)
+internal let ERROR_LOCKED = Int32(212)
+internal let ERROR_NOT_LOCKED = Int32(158)
+internal let ERROR_PATH_NOT_FOUND = Int32(3)
+internal let ERROR_SHARING_VIOLATION = Int32(32)
+internal let ERROR_SUCCESS = Int32(0)
+internal let ERROR_WRITE_FAULT = Int32(29)
+internal let ERROR_WRITE_PROTECT = Int32(19)
 #endif
 
 /// File-system operation attempted on non-existent file.
