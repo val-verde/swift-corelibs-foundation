@@ -18,6 +18,10 @@ import Darwin
 // but we want to explicitly depend on its types in this file,
 // so we need to make sure Swift doesn't think it's @_implementationOnly.
 import WinSDK
+
+internal let HANDLE_FLAG_INHERIT = WinSDK.HANDLE_FLAG_INHERIT
+internal let INVALID_SOCKET = SOCKET(bitPattern: -1)
+internal let STARTF_USESTDHANDLES = WinSDK.STARTF_USESTDHANDLES
 #endif
 
 extension Process {
@@ -403,7 +407,7 @@ open class Process: NSObject {
       var result: Int32 = SOCKET_ERROR
 
       var address: sockaddr_in =
-          sockaddr_in(sin_family: ADDRESS_FAMILY(AF_INET), sin_port: USHORT(0),
+          sockaddr_in(sin_family: Int16(AF_INET), sin_port: USHORT(0),
                       sin_addr: IN_ADDR(S_un: in_addr.__Unnamed_union_S_un(S_un_b: in_addr.__Unnamed_union_S_un.__Unnamed_struct_S_un_b(s_b1: 127, s_b2: 0, s_b3: 0, s_b4: 1))),
                       sin_zero: (CHAR(0), CHAR(0), CHAR(0), CHAR(0), CHAR(0), CHAR(0), CHAR(0), CHAR(0)))
       withUnsafePointer(to: &address) {
@@ -512,7 +516,7 @@ open class Process: NSObject {
 
         func deferReset(handle: HANDLE) throws {
             var handleInfo: DWORD = 0
-            guard GetHandleInformation(handle, &handleInfo) else {
+            guard GetHandleInformation(handle, &handleInfo) != 0 else {
                 throw _NSErrorWithWindowsError(GetLastError(), reading: false)
             }
             modifiedPipes.append((handle: handle, prevValue: handleInfo & DWORD(HANDLE_FLAG_INHERIT)))
@@ -667,11 +671,11 @@ open class Process: NSObject {
         try quoteWindowsCommandLine(command).withCString(encodedAs: UTF16.self) { wszCommandLine in
           try FileManager.default._fileSystemRepresentation(withPath: workingDirectory) { wszCurrentDirectory in
             try szEnvironment.withCString(encodedAs: UTF16.self) { wszEnvironment in
-              if !CreateProcessW(nil, UnsafeMutablePointer<WCHAR>(mutating: wszCommandLine),
-                                 nil, nil, true,
-                                 DWORD(CREATE_UNICODE_ENVIRONMENT), UnsafeMutableRawPointer(mutating: wszEnvironment),
-                                 wszCurrentDirectory,
-                                 &siStartupInfo, &piProcessInfo) {
+              if CreateProcessW(nil, UnsafeMutablePointer<WCHAR>(mutating: wszCommandLine),
+                                nil, nil, 1,
+                                DWORD(CREATE_UNICODE_ENVIRONMENT), UnsafeMutableRawPointer(mutating: wszEnvironment),
+                                wszCurrentDirectory,
+                                &siStartupInfo, &piProcessInfo) == 0 {
                 let error = GetLastError()
                 // If the current directory doesn't exist, Windows
                 // throws an ERROR_DIRECTORY. Since POSIX gives an
@@ -687,7 +691,7 @@ open class Process: NSObject {
         }
 
         self.processHandle = piProcessInfo.hProcess
-        if !CloseHandle(piProcessInfo.hThread) {
+        if CloseHandle(piProcessInfo.hThread) == 0 {
           throw _NSErrorWithWindowsError(GetLastError(), reading: false)
         }
 
