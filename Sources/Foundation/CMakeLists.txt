@@ -147,9 +147,12 @@ target_compile_options(Foundation PUBLIC
 target_link_libraries(Foundation
   PRIVATE
     $<$<PLATFORM_ID:Windows>:CoreFoundationResources>
-    $<$<PLATFORM_ID:Windows>:Ole32>
-    $<$<PLATFORM_ID:Windows>:Shell32>
-    $<$<PLATFORM_ID:Windows>:pathcch>
+    $<$<PLATFORM_ID:Windows>:dbghelp>
+    $<$<PLATFORM_ID:Windows>:imagehlp>
+    $<$<PLATFORM_ID:Windows>:ole32>
+    $<$<PLATFORM_ID:Windows>:shell32>
+    $<$<PLATFORM_ID:Windows>:shlwapi>
+    $<$<PLATFORM_ID:Windows>:winuuid>
     CoreFoundation
     uuid
   PUBLIC
