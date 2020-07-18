@@ -9,6 +9,11 @@
 
 @_implementationOnly import CoreFoundation
 
+#if os(Windows)
+import WinSDK
+internal let NI_MAXHOST = 1025
+#endif
+
 #if os(Android)
     // Android Glibc differs a little with respect to the Linux Glibc.
 
@@ -84,7 +89,7 @@ open class Host: NSObject {
             return "localhost"
         }
         defer { hostname.deallocate() }
-        guard GetComputerNameExA(ComputerNameDnsHostname, hostname, &dwLength) else {
+        guard GetComputerNameExA(ComputerNameDnsHostname, hostname, &dwLength) != 0 else {
             return "localhost"
         }
         return String(cString: hostname)
@@ -214,7 +219,7 @@ open class Host: NSObject {
           }
           hints.ai_family = AF_UNSPEC
           hints.ai_socktype = SOCK_STREAM
-          hints.ai_protocol = IPPROTO_TCP.rawValue
+          hints.ai_protocol = IPPROTO_TCP
 
           var aiResult: UnsafeMutablePointer<ADDRINFOW>?
           var bSucceeded: Bool = false
