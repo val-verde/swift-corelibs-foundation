@@ -187,7 +187,7 @@ internal func _bytesInEncoding(_ str: NSString, _ encoding: String.Encoding, _ f
         return nil
     }
     
-    let buffer = malloc(cLength + 1)!.bindMemory(to: Int8.self, capacity: cLength + 1)
+    let buffer = calloc(1, cLength + 1)!.bindMemory(to: Int8.self, capacity: cLength + 1)
     if !str.getBytes(buffer, maxLength: cLength, usedLength: &used, encoding: encoding.rawValue, options: options, range: theRange, remaining: nil) {
         fatalError("Internal inconsistency; previously claimed getBytes returned success but failed with similar invocation")
     }
