@@ -20,6 +20,9 @@ endif()
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL Windows)
 set(CMAKE_POSITION_INDEPENDENT_CODE YES)
+else()
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -xc")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -xc++")
 endif()
 
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
@@ -84,6 +87,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux OR CMAKE_SYSTEM_NAME STREQUAL Android)
 elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
   # NOTE(compnerd) we only support building with the dynamic CRT as using the
   # static CRT causes problems for users of the library.
+  add_compile_options($<$<COMPILE_LANGUAGE:C>:-fno-objc-exceptions>)
+  add_compile_options($<$<COMPILE_LANGUAGE:C>:-fno-exceptions>)
   add_compile_definitions($<$<COMPILE_LANGUAGE:C>:_DLL>)
   if(BUILD_SHARED_LIBS)
     add_compile_definitions($<$<COMPILE_LANGUAGE:C>:_WINDLL)
