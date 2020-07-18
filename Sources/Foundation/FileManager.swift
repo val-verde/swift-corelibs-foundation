@@ -23,6 +23,10 @@ import CRT
 #if os(Windows)
 internal typealias NativeFSRCharType = WCHAR
 internal let NativeFSREncoding = String.Encoding.utf16LittleEndian.rawValue
+internal let INVALID_HANDLE_VALUE = UnsafeMutableRawPointer(bitPattern: -1)!
+internal let S_IFMT = CRT.S_IFMT
+internal let IO_REPARSE_TAG_MOUNT_POINT = DWORD(0xA0000003)
+internal let IO_REPARSE_TAG_SYMLINK = DWORD(0xA000000C)
 #else
 internal typealias NativeFSRCharType = CChar
 internal let NativeFSREncoding = String.Encoding.utf8.rawValue
@@ -392,7 +396,7 @@ open class FileManager : NSObject {
                         let modeT = number.uint32Value
                     #endif
 #if os(Windows)
-                    let result = _wchmod(fsRep, mode_t(modeT))
+                    let result = _wchmod(fsRep, Int32(modeT))
 #else
                     let result = chmod(fsRep, mode_t(modeT))
 #endif
@@ -432,7 +436,7 @@ open class FileManager : NSObject {
                     let hiddenAttrs = isHidden
                         ? attrs | DWORD(FILE_ATTRIBUTE_HIDDEN)
                         : attrs & DWORD(bitPattern: ~FILE_ATTRIBUTE_HIDDEN)
-                    guard SetFileAttributesW(fsRep, hiddenAttrs) else {
+                    guard SetFileAttributesW(fsRep, hiddenAttrs) != 0 else {
                       throw _NSErrorWithWindowsError(GetLastError(), reading: false, paths: [path])
                     }
 #else
@@ -860,7 +864,7 @@ open class FileManager : NSObject {
 
     internal func _filePermissionsMask(mode : UInt32) -> Int {
 #if os(Windows)
-        return Int(mode & ~UInt32(ucrt.S_IFMT))
+        return Int(mode & ~UInt32(S_IFMT))
 #elseif canImport(Darwin)
         return Int(mode & ~UInt32(S_IFMT))
 #else
@@ -1299,8 +1303,8 @@ public struct FileAttributeType : RawRepresentable, Equatable, Hashable {
             }
             defer { CloseHandle(handle) }
             var tagInfo = FILE_ATTRIBUTE_TAG_INFO()
-            if !GetFileInformationByHandleEx(handle, FileAttributeTagInfo, &tagInfo,
-                                             DWORD(MemoryLayout<FILE_ATTRIBUTE_TAG_INFO>.size)) {
+            if GetFileInformationByHandleEx(handle, FileAttributeTagInfo, &tagInfo,
+                                            DWORD(MemoryLayout<FILE_ATTRIBUTE_TAG_INFO>.size)) == 0 {
                 self = .typeUnknown
                 return
             }
