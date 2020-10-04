@@ -920,7 +920,7 @@ extension FileManager {
         return statInfo
     }
 
-#if os(Linux)
+#if os(Android) || os(Linux)
     // This is only used on Linux and the only extra information it returns in addition
     // to a normal stat() call is the file creation date (stx_btime). It is only
     // used by attributesOfItem(atPath:) which is why the return is a simple stat()
