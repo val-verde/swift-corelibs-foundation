@@ -539,7 +539,7 @@ open class FileManager : NSObject {
     internal func _attributesOfItem(atPath path: String, includingPrivateAttributes: Bool = false) throws -> [FileAttributeKey: Any] {
         var result: [FileAttributeKey:Any] = [:]
 
-#if os(Linux)
+#if os(Android) || os(Linux)
         let (s, creationDate) = try _statxFile(atPath: path)
         result[.creationDate] = creationDate
 #else
@@ -877,7 +877,7 @@ open class FileManager : NSObject {
         return _filePermissionsMask(mode: UInt32(fileInfo.st_mode))
     }
 
-#if os(Linux)
+#if os(Android) || os(Linux)
     // statx() is only supported by Linux kernels >= 4.11.0
     internal lazy var supportsStatx: Bool = {
         let requiredVersion = OperatingSystemVersion(majorVersion: 4, minorVersion: 11, patchVersion: 0)
