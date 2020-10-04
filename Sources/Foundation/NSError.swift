@@ -998,7 +998,9 @@ extension POSIXErrorCode: _ErrorCodeProtocol {
 #if os(Windows)
 extension POSIXErrorCode {
   public static var ECANCELED: POSIXErrorCode {
-      return POSIXError.Code(rawValue: WinSDK.ECANCELED)!
+      let ECANCELED = Int32(9927)
+
+      return POSIXError.Code(rawValue: ECANCELED)!
   }
 }
 #endif
