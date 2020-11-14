@@ -24,6 +24,9 @@ fileprivate let _write = Glibc.write(_:_:_:)
 fileprivate let _close = Glibc.close(_:)
 #elseif canImport(WinSDK)
 import WinSDK
+fileprivate let STDERR_FILENO = CRT.STDERR_FILENO
+fileprivate let STDIN_FILENO = CRT.STDIN_FILENO
+fileprivate let STDOUT_FILENO = CRT.STDOUT_FILENO
 #endif
 
 #if canImport(WinSDK)
