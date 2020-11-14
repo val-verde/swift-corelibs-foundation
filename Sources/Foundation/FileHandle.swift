@@ -116,8 +116,8 @@ open class FileHandle : NSObject {
         // Closing the file descriptor while Dispatch is monitoring it leads to undefined behavior; guard against that.
         #if os(Windows)
         var dupHandle: HANDLE?
-        if !DuplicateHandle(GetCurrentProcess(), self._handle, GetCurrentProcess(), &dupHandle,
-                        /*dwDesiredAccess:*/0, /*bInheritHandle:*/true, DWORD(DUPLICATE_SAME_ACCESS)) {
+        if DuplicateHandle(GetCurrentProcess(), self._handle, GetCurrentProcess(), &dupHandle,
+                           /*dwDesiredAccess:*/0, /*bInheritHandle:*/1, DWORD(DUPLICATE_SAME_ACCESS)) == 0 {
             fatalError("DuplicateHandleFailed: \(GetLastError())")
         }
 
@@ -226,7 +226,7 @@ open class FileHandle : NSObject {
 
         if GetFileType(self._handle) == FILE_TYPE_DISK {
           var fiFileInfo: BY_HANDLE_FILE_INFORMATION = BY_HANDLE_FILE_INFORMATION()
-          if !GetFileInformationByHandle(self._handle, &fiFileInfo) {
+          if GetFileInformationByHandle(self._handle, &fiFileInfo) == 0 {
               throw _NSErrorWithWindowsError(GetLastError(), reading: true)
           }
 
@@ -243,10 +243,10 @@ open class FileHandle : NSObject {
                 MapViewOfFile(hMapping, DWORD(FILE_MAP_READ), 0, 0, szMapSize)
 
             return NSData.NSDataReadResult(bytes: pData, length: Int(szMapSize)) { buffer, length in
-              if !UnmapViewOfFile(buffer) {
+              if UnmapViewOfFile(buffer) == 0 {
                 fatalError("UnmapViewOfFile failed")
               }
-              if !CloseHandle(hMapping) {
+              if CloseHandle(hMapping) == 0 {
                 fatalError("CloseHandle failed")
               }
             }
@@ -268,7 +268,7 @@ open class FileHandle : NSObject {
           }
 
           var BytesRead: DWORD = 0
-          if !ReadFile(self._handle, buffer.advanced(by: total), BytesToRead, &BytesRead, nil) {
+          if ReadFile(self._handle, buffer.advanced(by: total), BytesToRead, &BytesRead, nil) == 0 {
             let err = GetLastError()
             if err == ERROR_BROKEN_PIPE {
                 break
@@ -366,7 +366,7 @@ open class FileHandle : NSObject {
 #if os(Windows)
         var BytesRead: DWORD = 0
         let BytesToRead: DWORD = DWORD(length)
-        if !ReadFile(self._handle, buffer, BytesToRead, &BytesRead, nil) {
+        if ReadFile(self._handle, buffer, BytesToRead, &BytesRead, nil) == 0 {
             throw _NSErrorWithWindowsError(GetLastError(), reading: true)
         }
         return Int(BytesRead)
@@ -384,7 +384,7 @@ open class FileHandle : NSObject {
         var bytesRemaining = length
         while bytesRemaining > 0 {
             var bytesWritten: DWORD = 0
-            if !WriteFile(self._handle, buf.advanced(by: length - bytesRemaining), DWORD(bytesRemaining), &bytesWritten, nil) {
+            if WriteFile(self._handle, buf.advanced(by: length - bytesRemaining), DWORD(bytesRemaining), &bytesWritten, nil) == 0 {
                 throw _NSErrorWithWindowsError(GetLastError(), reading: false)
             }
             if bytesWritten == 0 {
@@ -416,7 +416,7 @@ open class FileHandle : NSObject {
     public init(fileDescriptor fd: Int32, closeOnDealloc closeopt: Bool) {
       if (closeopt) {
         var handle: HANDLE?
-        if !DuplicateHandle(GetCurrentProcess(), HANDLE(bitPattern: _get_osfhandle(fd))!, GetCurrentProcess(), &handle, 0, false, DWORD(DUPLICATE_SAME_ACCESS)) {
+        if DuplicateHandle(GetCurrentProcess(), HANDLE(bitPattern: _get_osfhandle(fd))!, GetCurrentProcess(), &handle, 0, false, DWORD(DUPLICATE_SAME_ACCESS)) == 0 {
           fatalError("DuplicateHandle() failed: \(GetLastError())")
         }
         _close(fd)
@@ -521,7 +521,7 @@ open class FileHandle : NSObject {
 
         #if os(Windows)
         var liPointer: LARGE_INTEGER = LARGE_INTEGER(QuadPart: 0)
-        guard SetFilePointerEx(self._handle, LARGE_INTEGER(QuadPart: 0), &liPointer, DWORD(FILE_CURRENT)) else {
+        guard SetFilePointerEx(self._handle, LARGE_INTEGER(QuadPart: 0), &liPointer, DWORD(FILE_CURRENT)) != 0 else {
             throw _NSErrorWithWindowsError(GetLastError(), reading: true)
         }
         return UInt64(liPointer.QuadPart)
@@ -541,7 +541,7 @@ open class FileHandle : NSObject {
 
         #if os(Windows)
         var liPointer: LARGE_INTEGER = LARGE_INTEGER(QuadPart: 0)
-        guard SetFilePointerEx(self._handle, LARGE_INTEGER(QuadPart: 0), &liPointer, DWORD(FILE_END)) else {
+        guard SetFilePointerEx(self._handle, LARGE_INTEGER(QuadPart: 0), &liPointer, DWORD(FILE_END)) != 0 else {
             throw _NSErrorWithWindowsError(GetLastError(), reading: true)
         }
         return UInt64(liPointer.QuadPart)
@@ -559,7 +559,7 @@ open class FileHandle : NSObject {
         guard _isPlatformHandleValid else { throw NSError(domain: NSCocoaErrorDomain, code: CocoaError.fileReadUnknown.rawValue) }
 
         #if os(Windows)
-        guard SetFilePointerEx(self._handle, LARGE_INTEGER(QuadPart: LONGLONG(offset)), nil, DWORD(FILE_BEGIN)) else {
+        guard SetFilePointerEx(self._handle, LARGE_INTEGER(QuadPart: LONGLONG(offset)), nil, DWORD(FILE_BEGIN)) != = 0 else {
             throw _NSErrorWithWindowsError(GetLastError(), reading: true)
         }
         #else
@@ -574,10 +574,10 @@ open class FileHandle : NSObject {
         guard _isPlatformHandleValid else { throw NSError(domain: NSCocoaErrorDomain, code: CocoaError.fileWriteUnknown.rawValue) }
 
         #if os(Windows)
-        guard SetFilePointerEx(self._handle, LARGE_INTEGER(QuadPart: LONGLONG(offset)), nil, DWORD(FILE_BEGIN)) else {
+        guard SetFilePointerEx(self._handle, LARGE_INTEGER(QuadPart: LONGLONG(offset)), nil, DWORD(FILE_BEGIN)) != 0 else {
             throw _NSErrorWithWindowsError(GetLastError(), reading: false)
         }
-        guard SetEndOfFile(self._handle) else {
+        guard SetEndOfFile(self._handle) != 0 else {
             throw _NSErrorWithWindowsError(GetLastError(), reading: false)
         }
         #else
@@ -591,7 +591,7 @@ open class FileHandle : NSObject {
         guard self != FileHandle._nulldeviceFileHandle else { return }
         
         #if os(Windows)
-        guard FlushFileBuffers(self._handle) else {
+        guard FlushFileBuffers(self._handle) != 0 else {
             throw _NSErrorWithWindowsError(GetLastError(), reading: false)
         }
         #else
@@ -636,7 +636,7 @@ open class FileHandle : NSObject {
 
 #if os(Windows)
             // SR-13822 - Not Closing the file descriptor on Windows causes a Stack Overflow
-            guard CloseHandle(self._handle) else {
+            guard CloseHandle(self._handle) != 0 else {
                 throw _NSErrorWithWindowsError(GetLastError(), reading: true)
             }
             self._handle = INVALID_HANDLE_VALUE
@@ -1014,12 +1014,12 @@ open class Pipe: NSObject {
 
     public override init() {
 #if os(Windows)
-        var saAttr: SECURITY_ATTRIBUTES = SECURITY_ATTRIBUTES(nLength: DWORD(MemoryLayout<SECURITY_ATTRIBUTES>.size), lpSecurityDescriptor: nil, bInheritHandle: true)
+        var saAttr: SECURITY_ATTRIBUTES = SECURITY_ATTRIBUTES(nLength: DWORD(MemoryLayout<SECURITY_ATTRIBUTES>.size), lpSecurityDescriptor: nil, bInheritHandle: 1)
 
         var hReadPipe: HANDLE?
         var hWritePipe: HANDLE?
 
-        if !CreatePipe(&hReadPipe, &hWritePipe, &saAttr, 0) {
+        if CreatePipe(&hReadPipe, &hWritePipe, &saAttr, 0) == 0 {
           fatalError("CreatePipe failed")
         }
         self.fileHandleForReading = FileHandle(handle: hReadPipe!,
