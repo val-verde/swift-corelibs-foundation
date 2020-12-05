@@ -85,16 +85,16 @@ public protocol PortDelegate: AnyObject {
 
 #if canImport(Glibc) && !os(Android)
 import Glibc
-fileprivate let SOCK_STREAM = Int32(Glibc.SOCK_STREAM.rawValue)
-fileprivate let SOCK_DGRAM  = Int32(Glibc.SOCK_DGRAM.rawValue)
-fileprivate let IPPROTO_TCP = Int32(Glibc.IPPROTO_TCP)
+fileprivate let SOCK_STREAM = Glibc.SOCK_STREAM.getValue()
+fileprivate let SOCK_DGRAM  = Glibc.SOCK_DGRAM.getValue()
+fileprivate let IPPROTO_TCP = Glibc.IPPROTO_TCP.getValue()
 #endif
 
 #if canImport(Glibc) && os(Android)
 import Glibc
-fileprivate let SOCK_STREAM = Int32(Glibc.SOCK_STREAM)
-fileprivate let SOCK_DGRAM  = Int32(Glibc.SOCK_DGRAM)
-fileprivate let IPPROTO_TCP = Int32(Glibc.IPPROTO_TCP)
+fileprivate let SOCK_STREAM = Glibc.SOCK_STREAM.getValue()
+fileprivate let SOCK_DGRAM  = Glibc.SOCK_DGRAM.getValue()
+fileprivate let IPPROTO_TCP = Glibc.IPPROTO_TCP.getValue()
 fileprivate let INADDR_ANY: in_addr_t = 0
 #endif
 
