@@ -14,6 +14,30 @@ import WinSDK
 internal let NI_MAXHOST = 1025
 #endif
 
+internal extension Int {
+    func getValue() -> Int32 {
+        return Int32(self)
+    }
+}
+
+internal extension Int32 {
+    func getValue() -> Int32 {
+        return self
+    }
+}
+
+internal extension RawRepresentable where RawValue == Int {
+    func getValue() -> Int32 {
+        return Int32(self.rawValue)
+    }
+}
+
+internal extension RawRepresentable where RawValue == UInt32 {
+    func getValue() -> Int32 {
+        return Int32(self.rawValue)
+    }
+}
+
 #if os(Android)
     // Android Glibc differs a little with respect to the Linux Glibc.
 
@@ -278,11 +302,7 @@ open class Host: NSObject {
             }
             var hints = addrinfo()
             hints.ai_family = PF_UNSPEC
-#if os(macOS) || os(iOS) || os(Android)
-            hints.ai_socktype = SOCK_STREAM
-#else
-            hints.ai_socktype = Int32(SOCK_STREAM.rawValue)
-#endif
+            hints.ai_socktype = SOCK_STREAM.getValue()
     
             hints.ai_flags = flags
             

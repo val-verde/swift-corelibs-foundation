@@ -785,11 +785,7 @@ open class Process: NSObject {
         }
 
         var taskSocketPair : [Int32] = [0, 0]
-#if os(macOS) || os(iOS) || os(Android)
-        socketpair(AF_UNIX, SOCK_STREAM, 0, &taskSocketPair)
-#else
-        socketpair(AF_UNIX, Int32(SOCK_STREAM.rawValue), 0, &taskSocketPair)
-#endif
+        socketpair(AF_UNIX, SOCK_STREAM.getValue(), 0, &taskSocketPair)
         var context = CFSocketContext()
         context.version = 0
         context.retain = runLoopSourceRetain
