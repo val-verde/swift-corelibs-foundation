@@ -360,7 +360,7 @@ open class Thread : NSObject {
         let maxSupportedStackDepth = 128;
         let addrs = UnsafeMutablePointer<UnsafeMutableRawPointer?>.allocate(capacity: maxSupportedStackDepth)
         defer { addrs.deallocate() }
-#if os(Android)
+#if os(Android) || os(Musl)
         let count = 0
 #elseif os(Windows)
         let count = RtlCaptureStackBackTrace(0, DWORD(maxSupportedStackDepth),
@@ -381,7 +381,7 @@ open class Thread : NSObject {
     }
 
     open class var callStackSymbols: [String] {
-#if os(Android)
+#if os(Android) || os(Musl)
         return []
 #elseif os(Windows)
         let hProcess: HANDLE = GetCurrentProcess()
