@@ -9,7 +9,7 @@
 
 #if os(macOS) || os(iOS)
 fileprivate let _NSPageSize = Int(vm_page_size)
-#elseif os(Linux) || os(Android) || os(OpenBSD)
+#elseif os(Linux) || os(Musl) || os(Android) || os(OpenBSD)
 fileprivate let _NSPageSize = Int(getpagesize())
 #elseif os(Windows)
 import WinSDK

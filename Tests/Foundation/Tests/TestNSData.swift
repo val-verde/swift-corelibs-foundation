@@ -1708,7 +1708,7 @@ extension TestNSData {
     }
 
     func test_contentsOfZeroFile() {
-#if os(Linux)
+#if os(Linux) || os(Musl)
         guard FileManager.default.fileExists(atPath: "/proc/self") else {
             return
         }
@@ -1738,7 +1738,7 @@ extension TestNSData {
     }
 
     func test_wrongSizedFile() {
-#if os(Linux)
+#if os(Linux) || os(Musl)
         // Some files in /sys report a non-zero st_size often bigger than the contents
         guard let data = NSData.init(contentsOfFile: "/sys/kernel/profiling") else {
             XCTFail("Cant read /sys/kernel/profiling")

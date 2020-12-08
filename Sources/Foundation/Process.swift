@@ -97,7 +97,7 @@ func findMaximumOpenFD() -> CInt {
     }
 
     // We don't have /proc, let's go with the best estimate.
-#if os(Linux)
+#if os(Linux) || os(Musl)
     return getdtablesize()
 #else
     return 4096

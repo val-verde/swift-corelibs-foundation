@@ -87,7 +87,7 @@ In Swift, the OS-check macro is also available:
 ```swift
 #if os(macOS) || os(iOS)
 import Darwin
-#elseif os(Linux)
+#elseif os(Linux) || os(Musl)
 import Glibc
 #endif
 ```

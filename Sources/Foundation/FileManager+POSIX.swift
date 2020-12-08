@@ -19,7 +19,7 @@ extension FileManager {
     internal func _mountedVolumeURLs(includingResourceValuesForKeys propertyKeys: [URLResourceKey]?, options: VolumeEnumerationOptions = []) -> [URL]? {
         var urls: [URL] = []
 
-#if os(Linux) || os(Android)
+#if os(Linux) || os(Musl) || os(Android)
         guard let procMounts = try? String(contentsOfFile: "/proc/mounts", encoding: .utf8) else {
             return nil
         }
@@ -920,7 +920,7 @@ extension FileManager {
         return statInfo
     }
 
-#if os(Android) || os(Linux)
+#if os(Android) || os(Linux) || os(Musl)
     // This is only used on Linux and the only extra information it returns in addition
     // to a normal stat() call is the file creation date (stx_btime). It is only
     // used by attributesOfItem(atPath:) which is why the return is a simple stat()
@@ -1250,7 +1250,7 @@ extension FileManager {
                         if let originalFS = originalFS,
                            let newItemFS = newItemFS {
 
-                                #if os(Linux)
+                                #if os(Linux) || os(Musl)
                                 if _CFHasRenameat2 && kernelSupportsRenameat2 {
                                     if _CF_renameat2(AT_FDCWD, originalFS, AT_FDCWD, newItemFS, _CF_renameat2_RENAME_EXCHANGE) == 0 {
                                         return nil

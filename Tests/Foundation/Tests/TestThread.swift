@@ -53,7 +53,7 @@ class TestThread : XCTestCase {
 #endif
         }
 
-#if os(Linux) || os(Android) // Linux sets the initial thread name to the process name.
+#if os(Linux) || os(Musl) || os(Android) // Linux sets the initial thread name to the process name.
         XCTAssertEqual(Thread.current.name, "TestFoundation")
         testInternalThreadName("TestFoundation")
 #else
@@ -66,7 +66,7 @@ class TestThread : XCTestCase {
         testInternalThreadName("mainThread")
 
         Thread.current.name = "12345678901234567890"
-#if os(Linux) || os(Android)
+#if os(Linux) || os(Musl) || os(Android)
         // pthread_setname_np() only allows 15 characters on Linux, so setting it fails
         // and the previous name will still be there.
         XCTAssertEqual(Thread.current.name, "mainThread")

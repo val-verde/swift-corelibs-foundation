@@ -52,7 +52,7 @@ class _FTPSocket {
     }
 
     init(port: UInt16) throws {
-        #if os(Linux)
+        #if os(Linux) || os(Musl)
             let SOCKSTREAM = Int32(SOCK_STREAM.rawValue)
         #else
             let SOCKSTREAM = SOCK_STREAM
@@ -96,7 +96,7 @@ class _FTPSocket {
         // asking to accept incoming connections if the firewall is enabled.
         let addr = UInt32(INADDR_LOOPBACK).bigEndian
         let netPort = port.bigEndian
-        #if os(Linux)
+        #if os(Linux) || os(Musl)
             return sockaddr_in(sin_family: sa_family_t(AF_INET), sin_port: netPort, sin_addr: in_addr(s_addr: addr), sin_zero: (0,0,0,0,0,0,0,0))
         #elseif os(Android)
             return sockaddr_in(sin_family: sa_family_t(AF_INET), sin_port: netPort, sin_addr: in_addr(s_addr: addr), __pad: (0,0,0,0,0,0,0,0))

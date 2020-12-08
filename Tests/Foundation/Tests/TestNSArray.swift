@@ -47,7 +47,7 @@ class TestNSArray : XCTestCase {
             ("test_customMirror", test_customMirror),
         ]
 
-#if os(iOS) || os(macOS) || os(tvOS) || os(watchOS) || os(Linux)
+#if os(iOS) || os(macOS) || os(tvOS) || os(watchOS) || os(Linux) || os(Musl)
         tests.append(contentsOf: [
             ("test_arrayUsedAsCFArrayInvokesArrayMethods", test_arrayUsedAsCFArrayInvokesArrayMethods),
         ])
@@ -829,7 +829,7 @@ class TestNSArray : XCTestCase {
         XCTAssertEqual(array[6] as! String, arrayMirror.descendant(6) as! String)
     }
 
-#if os(iOS) || os(macOS) || os(tvOS) || os(watchOS) || os(Linux)
+#if os(iOS) || os(macOS) || os(tvOS) || os(watchOS) || os(Linux) || os(Musl)
     func test_arrayUsedAsCFArrayInvokesArrayMethods() {
         let number = 789 as NSNumber
         let array = NSMutableArray(array: [123, 456])
