@@ -1603,7 +1603,11 @@ CF_CROSS_PLATFORM_EXPORT int _CFThreadGetName(char *buf, int length) {
     buf[sz] = 0;
     return 0;
 #elif TARGET_OS_LINUX
+#if defined(__GLIBC__)
     return pthread_getname_np(pthread_self(), buf, length);
+#else
+    return -1;
+#endif
 #elif TARGET_OS_WIN32
     *buf = '\0';
 
