@@ -19,7 +19,7 @@ func _NSCFLockInit() -> _NSCFLock {
 typealias _NSCFLock = Int32
 func _NSCFLockInit() -> _NSCFLock { 0 }
 
-#elseif os(Linux) || os(FreeBSD)
+#elseif os(Linux) || os(Musl) || os(FreeBSD)
 
 typealias _NSCFLock = Int32
 func _NSCFLockInit() -> _NSCFLock { 0 }

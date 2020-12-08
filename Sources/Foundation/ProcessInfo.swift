@@ -105,7 +105,7 @@ open class ProcessInfo: NSObject {
 #if canImport(Darwin)
         // Just use CoreFoundation on Darwin
         return CFCopySystemVersionString()?._swiftObject ?? "Darwin"
-#elseif os(Linux)
+#elseif os(Linux) || os(Musl)
         // Try to parse a `PRETTY_NAME` out of `/etc/os-release`.
         if let osReleaseContents = try? String(contentsOf: URL(fileURLWithPath: "/etc/os-release", isDirectory: false)),
            let name = osReleaseContents.split(separator: "\n").first(where: { $0.hasPrefix("PRETTY_NAME=") })
@@ -228,7 +228,7 @@ open class ProcessInfo: NSObject {
             minorVersion: Int(osVersionInfo.dwMinorVersion),
             patchVersion: Int(osVersionInfo.dwBuildNumber)
         )
-#elseif os(Linux) || os(FreeBSD) || os(OpenBSD) || os(Android)
+#elseif os(Linux) || os(Musl) || os(FreeBSD) || os(OpenBSD) || os(Android)
         var utsNameBuffer = utsname()
         guard uname(&utsNameBuffer) == 0 else {
             return OperatingSystemVersion(majorVersion: fallbackMajor, minorVersion: fallbackMinor, patchVersion: fallbackPatch)

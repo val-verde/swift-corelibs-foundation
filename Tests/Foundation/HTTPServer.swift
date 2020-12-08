@@ -56,7 +56,7 @@ extension UInt16 {
 // _TCPSocket wraps one socket that is used either to listen()/accept() new connections, or for the client connection itself.
 class _TCPSocket: CustomStringConvertible {
 #if !os(Windows)
-    #if os(Linux) || os(Android) || os(FreeBSD)
+    #if os(Linux) || os(Musl) || os(Android) || os(FreeBSD)
     private let sendFlags = CInt(MSG_NOSIGNAL)
 #else
     private let sendFlags = CInt(0)
@@ -105,7 +105,7 @@ class _TCPSocket: CustomStringConvertible {
         var value: Int8 = 1
         _ = try attempt("setsockopt", valid: { $0 == 0 }, setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, &value, Int32(MemoryLayout.size(ofValue: value))))
 #else
-#if os(Linux) && !os(Android)
+#if os(Linux) && !os(Musl) && !os(Android)
         let SOCKSTREAM = Int32(SOCK_STREAM.rawValue)
 #else
         let SOCKSTREAM = SOCK_STREAM
@@ -141,7 +141,7 @@ class _TCPSocket: CustomStringConvertible {
         let netPort = UInt16(bigEndian: port ?? 0)
         #if os(Android)
             return sockaddr_in(sin_family: sa_family_t(AF_INET), sin_port: netPort, sin_addr: in_addr(s_addr: addr), __pad: (0,0,0,0,0,0,0,0))
-        #elseif os(Linux)
+        #elseif os(Linux) || os(Musl)
             return sockaddr_in(sin_family: sa_family_t(AF_INET), sin_port: netPort, sin_addr: in_addr(s_addr: addr), sin_zero: (0,0,0,0,0,0,0,0))
         #elseif os(Windows)
             return sockaddr_in(sin_family: ADDRESS_FAMILY(AF_INET), sin_port: USHORT(netPort), sin_addr: IN_ADDR(S_un: in_addr.__Unnamed_union_S_un(S_addr: addr)), sin_zero: (CHAR(0), CHAR(0), CHAR(0), CHAR(0), CHAR(0), CHAR(0), CHAR(0), CHAR(0)))

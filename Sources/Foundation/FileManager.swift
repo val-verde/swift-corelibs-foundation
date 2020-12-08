@@ -392,7 +392,7 @@ open class FileManager : NSObject {
                     }
                     #if os(macOS) || os(iOS)
                         let modeT = number.uint16Value
-                    #elseif os(Linux) || os(Android) || os(Windows)
+                    #elseif os(Linux) || os(Musl) || os(Android) || os(Windows)
                         let modeT = number.uint32Value
                     #endif
 #if os(Windows)
@@ -539,7 +539,7 @@ open class FileManager : NSObject {
     internal func _attributesOfItem(atPath path: String, includingPrivateAttributes: Bool = false) throws -> [FileAttributeKey: Any] {
         var result: [FileAttributeKey:Any] = [:]
 
-#if os(Android) || os(Linux)
+#if os(Android) || os(Linux) || os(Musl)
         let (s, creationDate) = try _statxFile(atPath: path)
         result[.creationDate] = creationDate
 #else
@@ -877,7 +877,7 @@ open class FileManager : NSObject {
         return _filePermissionsMask(mode: UInt32(fileInfo.st_mode))
     }
 
-#if os(Android) || os(Linux)
+#if os(Android) || os(Linux) || os(Musl)
     // statx() is only supported by Linux kernels >= 4.11.0
     internal lazy var supportsStatx: Bool = {
         let requiredVersion = OperatingSystemVersion(majorVersion: 4, minorVersion: 11, patchVersion: 0)
