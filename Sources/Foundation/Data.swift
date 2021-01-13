@@ -25,6 +25,13 @@ internal func malloc_good_size(_ size: Int) -> Int {
 import Glibc
 #endif
 
+public let calloc = CoreFoundation.calloc
+public let free = CoreFoundation.free
+public let malloc = CoreFoundation.malloc
+public let memcmp = CoreFoundation.memcmp
+public let memcpy = CoreFoundation.memcpy
+public let memset = CoreFoundation.memset
+
 internal func __NSDataInvokeDeallocatorUnmap(_ mem: UnsafeMutableRawPointer, _ length: Int) {
 #if os(Windows)
     UnmapViewOfFile(mem)
