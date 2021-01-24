@@ -26,7 +26,9 @@
 #include <signal.h>
 #include <stddef.h>
 #include <stdio.h>
+#ifndef _WIN32
 #include <stdlib.h>
+#endif
 #include <string.h>
 #include <time.h>
 
