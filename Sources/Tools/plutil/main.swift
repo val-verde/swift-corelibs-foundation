@@ -15,6 +15,7 @@ import Glibc
 #elseif canImport(CRT)
 import Foundation
 import CRT
+import WinSDK
 #endif
 
 func help() -> Int32 {
