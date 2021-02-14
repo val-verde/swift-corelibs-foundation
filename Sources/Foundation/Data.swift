@@ -25,13 +25,6 @@ internal func malloc_good_size(_ size: Int) -> Int {
 import Glibc
 #endif
 
-public let calloc = CoreFoundation.calloc
-public let free = CoreFoundation.free
-public let malloc = CoreFoundation.malloc
-public let memcmp = CoreFoundation.memcmp
-public let memcpy = CoreFoundation.memcpy
-public let memset = CoreFoundation.memset
-
 internal func __NSDataInvokeDeallocatorUnmap(_ mem: UnsafeMutableRawPointer, _ length: Int) {
 #if os(Windows)
     UnmapViewOfFile(mem)
@@ -2752,7 +2745,7 @@ public struct Data : ReferenceConvertible, Equatable, Hashable, RandomAccessColl
     public var mutableBytes: UnsafeMutableRawPointer { fatalError() }
     
     /// Returns `true` if the two `Data` arguments are equal.
-    @inlinable // This is @inlinable as emission into clients is safe -- the concept of equality on Data will not change.
+    // @inlinable // This is @inlinable as emission into clients is safe -- the concept of equality on Data will not change.
     public static func ==(d1 : Data, d2 : Data) -> Bool {
         let length1 = d1.count
         if length1 != d2.count {
