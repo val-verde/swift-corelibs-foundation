@@ -19,7 +19,7 @@ internal func malloc_good_size(_ size: Int) -> Int {
 }
 #endif
 
-@_implementationOnly import CoreFoundation
+import CoreFoundation
 
 #if canImport(Glibc)
 import Glibc
