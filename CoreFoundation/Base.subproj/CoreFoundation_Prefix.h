@@ -268,7 +268,7 @@ typedef unsigned long fd_mask;
 #endif
     
 
-#if !TARGET_OS_CYGWIN && !TARGET_OS_BSD
+#if !TARGET_OS_CYGWIN && !TARGET_OS_BSD && !(TARGET_OS_LINUX && !defined(__GLIBC__) && !TARGET_OS_ANDROID)
 #define issetugid() 0
 #endif
 
