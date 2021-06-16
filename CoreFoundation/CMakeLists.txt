@@ -25,9 +25,11 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -xc")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -xc++")
 endif()
 
-set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
-set(THREADS_PREFER_PTHREAD_FLAG OFF)
-find_package(Threads REQUIRED)
+if(NOT ANDROID)
+  set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+  set(THREADS_PREFER_PTHREAD_FLAG OFF)
+  find_package(Threads REQUIRED)
+endif()
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL Darwin)
   find_package(LibXml2 REQUIRED)
@@ -384,14 +386,17 @@ target_compile_definitions(CoreFoundation
 target_include_directories(CoreFoundation
                            PRIVATE
                              ${PROJECT_SOURCE_DIR})
+
 target_link_libraries(CoreFoundation PRIVATE
-  Threads::Threads
   ${CMAKE_DL_LIBS}
   BlocksRuntime
   dispatch)
-if(CMAKE_SYSTEM_NAME STREQUAL Android)
+if(ANDROID)
   target_link_libraries(CoreFoundation PRIVATE
     log)
+else()
+  target_link_libraries(CoreFoundation PRIVATE
+    Threads::Threads)
 endif()
 if(NOT CMAKE_SYSTEM_NAME STREQUAL Darwin)
   target_link_libraries(CoreFoundation PRIVATE
